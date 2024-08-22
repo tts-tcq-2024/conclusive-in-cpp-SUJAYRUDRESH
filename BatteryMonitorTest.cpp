@@ -24,7 +24,8 @@ public:
     void sendAlert(BreachType breachType) override {
         breachTypeMessage = "feed : " + std::to_string(static_cast<int>(breachType));
     }
-
+    void sendAlert(const std::string& message) override {
+    }
     const std::string& getBreachTypeMessage() const {
         return breachTypeMessage;
     }
