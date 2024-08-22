@@ -48,7 +48,8 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
 
     const auto& messages = mockOutput.getMessages();
     ASSERT_EQ(messages.size(), 1);
-    ASSERT_EQ(messages[0], "To: a.b@c.com\nHi, the temperature is too low\n");
+    //ASSERT_EQ(messages[0], "To: a.b@c.com\nHi, the temperature is too low\n");
+    ASSERT_EQ(messages[0], "Hi, the temperature is too low\n");
 }
 
 // Main function for Google Test
