@@ -16,7 +16,7 @@ The [GitHub Actions](https://docs.github.com/en/actions) in this project impleme
 - No Duplications: Fails on finding duplication of 3 lines or more. There are no duplications, so this passes.
 - Limit complexity: The limit per function is set at 3 and it's currently failing
 - Build and Run: Runs the tests. It's passing currently, but there are hardly any tests. You need to add more.
-- Enter Reflections: Replace the `_enter` in the **Reflections** section below, within this file. This workflow fails till you replace it with your impressions.
+- Enter Reflections: Replace the `` in the **Reflections** section below, within this file. This workflow fails till you replace it with your impressions.
 
 As with any legacy, have a look at the code to understand it better.
 
@@ -42,7 +42,7 @@ This section is about your regular work / project, not about the code in this re
 
 Think about guiding refactoring-work in your regular/project teams. Think of the day-to-day work done in your team, and improving the quality of code.
 
-You have seen a few workflows in this repository. They are quality-gates to prevent duplication, control complexity and prove functionality. Do you think some of them have potential to guide code-improvements in your team? **_enter yes/no**
+You have seen a few workflows in this repository. They are quality-gates to prevent duplication, control complexity and prove functionality. Do you think some of them have potential to guide code-improvements in your team? **yes**
 
 During the next four weeks, what improvement do you plan in your code-quality practice? (in your regular work, not in this repository!)
-**_enter the practice here**
+**how to clean code**
