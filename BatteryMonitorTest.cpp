@@ -29,12 +29,8 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     monitor.checkAndAlert(50, true);  // High temperature should trigger TOO_HIGH alert
 
     const auto& messages = mockOutput.getMessages();
-    //ASSERT_EQ(messages.size(), 1);
+    ASSERT_EQ(messages.size(), 1);
     ASSERT_EQ(messages[0], "feed : 1\n");  // Ensure this output format matches your implementation
-        std::cout << "Messages received: " << messages.size() << std::endl;
-    for (const auto& message : messages) {
-        std::cout << "Message: " << message << std::endl;
-    }
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
