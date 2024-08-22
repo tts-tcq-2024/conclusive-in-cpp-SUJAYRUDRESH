@@ -7,6 +7,19 @@
 #include "ControllerAlertHandler.h"
 #include "EmailAlertHandler.h"
 
+// Mock implementation of TemperatureClassifier for testing
+class TemperatureClassifier : public IBreachClassifier {
+public:
+    BreachType classify(double temperatureInC) override {
+        if (temperatureInC < 0) {
+            return BreachType::TOO_LOW;
+        } else if (temperatureInC > 45) {
+            return BreachType::TOO_HIGH;
+        }
+        return BreachType::NORMAL;
+    }
+};
+
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     MockOutput mockOutput;
     ControllerAlertHandler controllerAlertHandler;
@@ -23,7 +36,7 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
     MockOutput mockOutput;
-    EmailAlertHandler emailAlertHandler(mockOutput);
+    EmailAlertHandler emailAlertHandler;
 
     TemperatureClassifier classifier;
     BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
@@ -40,6 +53,5 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
 
 #endif // BATTERY_MONITOR_TEST_CPP
