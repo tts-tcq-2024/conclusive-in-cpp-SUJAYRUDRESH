@@ -28,6 +28,11 @@ private:
     }
 
     void handleEmailAlert(IAlertHandler& alertHandler, BreachType breachType) {
+        static const std::unordered_map<BreachType, std::string> breachTypeMessages = {
+            {BreachType::TOO_LOW, "Hi, the temperature is too low"},
+            {BreachType::TOO_HIGH, "Hi, the temperature is too high"}
+        };
+
         auto messageLookup = breachTypeMessages.find(breachType);
         if (messageLookup != breachTypeMessages.end() && !messageLookup->second.empty()) {
             alertHandler.sendAlert(messageLookup->second);
@@ -38,6 +43,5 @@ private:
     IAlertHandler& controllerHandler;
     IAlertHandler& emailHandler;
 };
-
 
 #endif // BATTERY_MONITOR_H
