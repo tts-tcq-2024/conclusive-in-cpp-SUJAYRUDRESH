@@ -1,3 +1,6 @@
+#ifndef BATTERY_MONITOR_H
+#define BATTERY_MONITOR_H
+
 #include "IBreachClassifier.h"
 #include "IAlertHandler.h"
 #include <unordered_map>
@@ -34,3 +37,6 @@ private:
     IAlertHandler& controllerHandler;
     IAlertHandler& emailHandler;
 };
+
+
+#endif // BATTERY_MONITOR_H
