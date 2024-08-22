@@ -10,7 +10,6 @@
 #include "BatteryMonitor.h"          // For BatteryMonitor class
 #include "ControllerAlertHandler.h"  // For ControllerAlertHandler class
 #include "IAlertHandler.h"           // For IAlertHandler interface
-#include "TemperatureClassifier.h"   // For TemperatureClassifier class
 #include "MockOutput.h"        // For MockAlertHandler class (a mock class to capture alerts)
 #include "EmailAlertHandler.h"
 // Mock implementation of TemperatureClassifier for testing
