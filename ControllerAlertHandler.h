@@ -1,3 +1,6 @@
+#ifndef CONTROLLER_ALERT_HANDLER_H
+#define CONTROLLER_ALERT_HANDLER_H
+
 #include "IAlertHandler.h"
 #include <iostream>
 
@@ -9,3 +12,5 @@ public:
     }
 
 };
+
+#endif // CONTROLLER_ALERT_HANDLER_H
