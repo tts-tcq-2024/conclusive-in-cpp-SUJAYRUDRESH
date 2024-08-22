@@ -1,3 +1,6 @@
+#ifndef MOCK_OUTPUT_H
+#define MOCK_OUTPUT_H
+
 #include "IAlertHandler.h"
 #include <vector>
 #include <string>
@@ -19,3 +22,5 @@ public:
 private:
     std::vector<std::string> messages;
 };
+
+#endif // MOCK_OUTPUT_H
