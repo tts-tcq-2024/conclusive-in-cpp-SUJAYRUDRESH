@@ -6,6 +6,8 @@
 
 class EmailAlertHandler : public IAlertHandler {
 public:
+    EmailAlertHandler() = default;
+
     void sendAlert(BreachType breachType) override {
         // Optionally handle BreachType if needed or leave unimplemented
     }
