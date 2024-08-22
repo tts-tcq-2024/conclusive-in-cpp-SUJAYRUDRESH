@@ -37,6 +37,7 @@ private:
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     MockAlertHandler mockHandler;
+    TemperatureClassifier classifier;
     BatteryMonitor monitor(classifier,mockHandler ,mockHandler);
 
     monitor.checkAndAlert(50, true);
