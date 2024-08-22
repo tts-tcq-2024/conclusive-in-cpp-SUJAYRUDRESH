@@ -16,7 +16,6 @@ public:
         } else if (temperatureInC > 45) {
             return BreachType::TOO_HIGH;
         }
-        return BreachType::NORMAL;
     }
 };
 
