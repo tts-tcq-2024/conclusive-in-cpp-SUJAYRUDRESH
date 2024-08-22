@@ -3,6 +3,7 @@
 
 #include "IBreachClassifier.h"
 #include "IAlertHandler.h"
+#include "ControllerAlertHandler.h"
 #include <unordered_map>
 
 class BatteryMonitor {
