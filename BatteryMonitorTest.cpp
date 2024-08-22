@@ -1,3 +1,6 @@
+#ifndef BATTERY_MONITOR_TEST_CPP
+#define BATTERY_MONITOR_TEST_CPP
+
 #include <gtest/gtest.h>
 #include "BatteryMonitor.h"
 #include "MockOutput.h"
@@ -37,3 +40,6 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
+
+#endif // BATTERY_MONITOR_TEST_CPP
