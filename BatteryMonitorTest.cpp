@@ -3,7 +3,6 @@
 #include "MockOutput.h"
 #include "ControllerAlertHandler.h"
 #include "EmailAlertHandler.h"
-#include "TemperatureClassifier.h"
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     MockOutput mockOutput;
