@@ -1,3 +1,6 @@
+#ifndef EMAIL_ALERT_HANDLER_H
+#define EMAIL_ALERT_HANDLER_H
+
 #include "IAlertHandler.h"
 #include <iostream>
 
@@ -13,3 +16,5 @@ public:
         std::cout << message << std::endl;
     }
 };
+
+#endif // EMAIL_ALERT_HANDLER_H
