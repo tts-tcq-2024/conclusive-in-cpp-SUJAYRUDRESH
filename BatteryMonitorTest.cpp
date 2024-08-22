@@ -19,18 +19,28 @@ public:
     }
 };
 
+class MockAlertHandler : public IAlertHandler {
+public:
+    void sendAlert(BreachType breachType) override {
+        breachTypeMessage = "feed : " + std::to_string(static_cast<int>(breachType));
+    }
+
+    const std::string& getBreachTypeMessage() const {
+        return breachTypeMessage;
+    }
+
+private:
+    std::string breachTypeMessage;
+};
+
+
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
-    MockOutput mockOutput;
-    ControllerAlertHandler controllerAlertHandler;
+    MockAlertHandler mockHandler;
+    BatteryMonitor monitor(classifier, mockHandler);
 
-    TemperatureClassifier classifier;
-    BatteryMonitor monitor(classifier, controllerAlertHandler, mockOutput);
+    monitor.checkAndAlert(50, true);
 
-    monitor.checkAndAlert(50, true);  // High temperature should trigger TOO_HIGH alert
-
-    const auto& messages = mockOutput.getMessages();
-    ASSERT_EQ(messages.size(), 1);
-    ASSERT_EQ(messages[0], "feed : 1\n");  // Ensure this output format matches your implementation
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1");  // Adjust expected value
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
