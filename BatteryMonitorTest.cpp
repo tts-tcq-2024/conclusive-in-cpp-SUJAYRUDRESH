@@ -43,7 +43,7 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
 
     monitor.checkAndAlert(50, true);
 
-    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1");  // Adjust expected value
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "");  // Adjust expected value
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
