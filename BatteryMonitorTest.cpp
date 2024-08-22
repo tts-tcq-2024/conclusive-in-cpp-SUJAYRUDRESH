@@ -37,7 +37,7 @@ private:
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     MockAlertHandler mockHandler;
-    BatteryMonitor monitor(classifier, mockHandler);
+    BatteryMonitor monitor(classifier,mockHandler ,mockHandler);
 
     monitor.checkAndAlert(50, true);
 
