@@ -11,6 +11,9 @@ public:
         std::cout << std::hex << header << " : " << static_cast<int>(breachType) << std::endl;
     }
 
+    void sendAlert(const std::string& message) override {
+        // Do nothing or provide a specific implementation if needed
+    }
 };
 
 #endif // CONTROLLER_ALERT_HANDLER_H
