@@ -74,7 +74,7 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     ControllerAlertHandler controllerAlertHandler;
     TemperatureClassifier classifier;
 
-    BatteryMonitor monitor(classifier, mockControllerHandler, mockEmailHandler);
+    BatteryMonitor monitor(classifier, mockControllerHandler, controllerAlertHandler);
 
     monitor.checkAndAlert(50, true);  // High temperature should trigger TOO_HIGH alert
 
