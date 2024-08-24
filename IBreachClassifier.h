@@ -3,7 +3,8 @@
 
 enum class BreachType {
     TOO_LOW,
-    TOO_HIGH
+    TOO_HIGH,
+    NORMAL // Add NORMAL case to enum
 };
 
 class IBreachClassifier {
