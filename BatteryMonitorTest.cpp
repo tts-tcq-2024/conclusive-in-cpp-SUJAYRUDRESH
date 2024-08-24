@@ -37,23 +37,34 @@ private:
 };
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
-    MockAlertHandler mockHandler;
+    // Create instances of the mocks
+    MockAlertHandler mockControllerHandler;
+    MockAlertHandler mockEmailHandler;  // Assuming emailHandler is needed but not used here
     TemperatureClassifier classifier;
-    BatteryMonitor monitor(classifier, mockHandler, mockHandler);
 
-    monitor.checkAndAlert(50, true);
+    // Instantiate the BatteryMonitor with the mock objects
+    BatteryMonitor monitor(classifier, mockControllerHandler, mockEmailHandler);
 
-    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH (1)
+    // Simulate an alert for a high temperature
+    monitor.checkAndAlert(50, true);  // 'true' for controller
+
+    // Verify that the correct message was sent
+    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH (1)
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
+    // Create instances of the mocks
     MockOutput mockOutput;
     EmailAlertHandler emailAlertHandler;
     TemperatureClassifier classifier;
-    BatteryMonitor monitor(classifier, mockOutput, emailAlertHandler);
 
-    monitor.checkAndAlert(-5, false);  // Low temperature should trigger TOO_LOW alert
+    // Instantiate the BatteryMonitor with the mock objects
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
 
+    // Simulate an alert for a low temperature
+    monitor.checkAndAlert(-5, false);  // 'false' for email
+
+    // Verify that the correct message was captured
     const auto& messages = mockOutput.getMessages();
     ASSERT_EQ(messages.size(), 1);  // Check that one message was sent
     ASSERT_EQ(messages[0], "Hi, the temperature is too low");  // Check the message content
