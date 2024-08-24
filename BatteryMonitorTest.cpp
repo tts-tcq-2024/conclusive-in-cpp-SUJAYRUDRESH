@@ -36,21 +36,7 @@ private:
     std::string breachTypeMessage;
 };
 
-TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
-    // Create instances of the mocks
-    MockAlertHandler mockControllerHandler;
-    MockAlertHandler mockEmailHandler;  // Email handler is mocked but not used in this test
-    TemperatureClassifier classifier;
 
-    // Instantiate the BatteryMonitor with the mock objects
-    BatteryMonitor monitor(classifier, mockControllerHandler, mockEmailHandler);
-
-    // Simulate an alert for a high temperature
-    monitor.checkAndAlert(50, true);  // 'true' indicates it's for the controller
-
-    // Verify that the correct message was sent to the controller
-    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH (1)
-}
 
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
@@ -69,6 +55,73 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
     const auto& messages = mockOutput.getMessages();
     ASSERT_EQ(messages.size(), 1);  // Check that one message was sent
     ASSERT_EQ(messages[0], "Hi, the temperature is too low");  // Check the message content
+}
+
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooLow) {
+    MockBreachClassifier mockClassifier;
+    mockClassifier.breachTypeToReturn = BreachType::TOO_LOW;
+    MockControllerAlertHandler mockControllerHandler;
+    MockEmailAlertHandler mockEmailHandler;
+
+    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(-5, true);
+
+    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 0");  // TOO_LOW
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooHigh) {
+    MockBreachClassifier mockClassifier;
+    mockClassifier.breachTypeToReturn = BreachType::TOO_HIGH;
+    MockControllerAlertHandler mockControllerHandler;
+    MockEmailAlertHandler mockEmailHandler;
+
+    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(50, true);
+
+    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");  // TOO_HIGH
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToEmailTooLow) {
+    MockBreachClassifier mockClassifier;
+    mockClassifier.breachTypeToReturn = BreachType::TOO_LOW;
+    MockControllerAlertHandler mockControllerHandler;
+    MockEmailAlertHandler mockEmailHandler;
+
+    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(-5, false);
+
+    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "Hi, the temperature is too low");
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToEmailTooHigh) {
+    MockBreachClassifier mockClassifier;
+    mockClassifier.breachTypeToReturn = BreachType::TOO_HIGH;
+    MockControllerAlertHandler mockControllerHandler;
+    MockEmailAlertHandler mockEmailHandler;
+
+    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(50, false);
+
+    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "Hi, the temperature is too high");
+}
+
+TEST(BatteryMonitorTest, NoAlertSentForNormalTemperature) {
+    MockBreachClassifier mockClassifier;
+    mockClassifier.breachTypeToReturn = BreachType::NORMAL;
+    MockControllerAlertHandler mockControllerHandler;
+    MockEmailAlertHandler mockEmailHandler;
+
+    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(25, true);
+
+    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "");
+    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "");
 }
 
 // Main function for Google Test
