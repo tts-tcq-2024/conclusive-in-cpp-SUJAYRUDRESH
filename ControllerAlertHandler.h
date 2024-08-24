@@ -12,7 +12,7 @@ public:
     }
 
     void sendAlert(const std::string& message) override {
-        // Do nothing or provide a specific implementation if needed
+        // Optionally implement or leave as-is
     }
 };
 
