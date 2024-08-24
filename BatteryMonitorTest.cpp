@@ -69,6 +69,18 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooLow) {
     ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 0"); // TOO_LOW
 }
 
+TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
+    MockAlertHandler mockControllerHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    TemperatureClassifier classifier;
+
+    BatteryMonitor monitor(classifier, mockControllerHandler, mockEmailHandler);
+
+    monitor.checkAndAlert(50, true);  // High temperature should trigger TOO_HIGH alert
+
+    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");
+}
+
 TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooHigh) {
     TemperatureClassifier classifier;
     MockAlertHandler mockHandler;
