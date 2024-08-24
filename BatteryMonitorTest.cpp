@@ -1,6 +1,3 @@
-#ifndef BATTERY_MONITOR_TEST_CPP
-#define BATTERY_MONITOR_TEST_CPP
-
 #include <gtest/gtest.h>
 #include "BatteryMonitor.h"
 #include "MockOutput.h"
@@ -16,7 +13,7 @@ public:
         } else if (temperatureInC > 45) {
             return BreachType::TOO_HIGH;
         } else {
-            return BreachType::NORMAL; // Add return for NORMAL case
+            return BreachType::NORMAL; // Normal case added
         }
     }
 };
@@ -28,7 +25,7 @@ public:
     }
 
     void sendAlert(const std::string& message) override {
-        breachTypeMessage = message;
+        // Handle string alert case
     }
 
     const std::string& getBreachTypeMessage() const {
@@ -46,20 +43,20 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
 
     monitor.checkAndAlert(50, true);
 
-    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH (1)
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
     MockOutput mockOutput;
-    TemperatureClassifier classifier;
     EmailAlertHandler emailAlertHandler;
+    TemperatureClassifier classifier;
     BatteryMonitor monitor(classifier, mockOutput, emailAlertHandler);
 
     monitor.checkAndAlert(-5, false);  // Low temperature should trigger TOO_LOW alert
 
     const auto& messages = mockOutput.getMessages();
-    ASSERT_EQ(messages.size(), 1);
-    ASSERT_EQ(messages[0], "Hi, the temperature is too low");
+    ASSERT_EQ(messages.size(), 1);  // Check that one message was sent
+    ASSERT_EQ(messages[0], "Hi, the temperature is too low");  // Check the message content
 }
 
 // Main function for Google Test
@@ -67,5 +64,3 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-#endif // BATTERY_MONITOR_TEST_CPP
