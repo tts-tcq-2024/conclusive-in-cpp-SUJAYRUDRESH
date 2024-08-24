@@ -8,9 +8,9 @@
 class TemperatureClassifier : public IBreachClassifier {
 public:
     BreachType classify(double temperatureInC) override {
-        if (temperatureInC < 0) {
+        if (temperatureInC =< 0) {
             return BreachType::TOO_LOW;
-        } else if (temperatureInC > 45) {
+        } else if (temperatureInC >= 45) {
             return BreachType::TOO_HIGH;
         } else {
             return BreachType::NORMAL; // Normal case added
