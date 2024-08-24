@@ -141,6 +141,71 @@ TEST(BatteryMonitorTest, EmailHandlerReceivesNoAlertForNormalTemperature) {
     ASSERT_EQ(messages.size(), 0); // No messages should be sent
 }
 
+TEST(BatteryMonitorTest, SendsCorrectMessageToControllerAtLowThreshold) {
+    TemperatureClassifier classifier;
+    MockAlertHandler mockHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    BatteryMonitor monitor(classifier, mockHandler, controllerAlertHandler);
+
+    monitor.checkAndAlert(0, true);  // Exactly at the low threshold
+
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 0"); // TOO_LOW
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToEmailAtLowThreshold) {
+    TemperatureClassifier classifier;
+    MockOutput mockOutput;
+    EmailAlertHandler emailAlertHandler;
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
+
+    monitor.checkAndAlert(0, false);  // Exactly at the low threshold
+
+    const auto& messages = mockOutput.getMessages();
+    ASSERT_EQ(messages.size(), 1);
+    ASSERT_EQ(messages[0], "Hi, the temperature is too low");
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToControllerAtHighThreshold) {
+    TemperatureClassifier classifier;
+    MockAlertHandler mockHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    BatteryMonitor monitor(classifier, mockHandler, controllerAlertHandler);
+
+    monitor.checkAndAlert(45, true);  // Exactly at the high threshold
+
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1"); // TOO_HIGH
+}
+
+TEST(BatteryMonitorTest, SendsCorrectMessageToEmailAtHighThreshold) {
+    TemperatureClassifier classifier;
+    MockOutput mockOutput;
+    EmailAlertHandler emailAlertHandler;
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
+
+    monitor.checkAndAlert(45, false);  // Exactly at the high threshold
+
+    const auto& messages = mockOutput.getMessages();
+    ASSERT_EQ(messages.size(), 1);
+    ASSERT_EQ(messages[0], "Hi, the temperature is too high");
+}
+
+TEST(BatteryMonitorTest, HandlesInvalidTemperatureInput) {
+    TemperatureClassifier classifier;
+    MockAlertHandler mockHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    BatteryMonitor monitor(classifier, mockHandler, controllerAlertHandler);
+
+    monitor.checkAndAlert(-1000, true);  // Extremely low temperature
+
+    // Depending on the implementation, this may be a case where the system does not handle such extremes
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 0"); // If it defaults to TOO_LOW
+
+    monitor.checkAndAlert(1000, true);  // Extremely high temperature
+
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1"); // If it defaults to TOO_HIGH
+}
+
+
 // Main function for Google Test
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
