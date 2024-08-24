@@ -57,71 +57,76 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
     ASSERT_EQ(messages[0], "Hi, the temperature is too low");  // Check the message content
 }
 
-
+// Test cases
 TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooLow) {
-    MockBreachClassifier mockClassifier;
-    mockClassifier.breachTypeToReturn = BreachType::TOO_LOW;
-    MockControllerAlertHandler mockControllerHandler;
-    MockEmailAlertHandler mockEmailHandler;
-
-    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+    TemperatureClassifier classifier;
+    MockAlertHandler mockHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    BatteryMonitor monitor(classifier, controllerAlertHandler, mockHandler);
 
     monitor.checkAndAlert(-5, true);
 
-    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 0");  // TOO_LOW
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 0"); // TOO_LOW
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooHigh) {
-    MockBreachClassifier mockClassifier;
-    mockClassifier.breachTypeToReturn = BreachType::TOO_HIGH;
-    MockControllerAlertHandler mockControllerHandler;
-    MockEmailAlertHandler mockEmailHandler;
-
-    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+    TemperatureClassifier classifier;
+    MockAlertHandler mockHandler;
+    ControllerAlertHandler controllerAlertHandler;
+    BatteryMonitor monitor(classifier, controllerAlertHandler, mockHandler);
 
     monitor.checkAndAlert(50, true);
 
-    ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");  // TOO_HIGH
+    ASSERT_EQ(mockHandler.getBreachTypeMessage(), "feed : 1"); // TOO_HIGH
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmailTooLow) {
-    MockBreachClassifier mockClassifier;
-    mockClassifier.breachTypeToReturn = BreachType::TOO_LOW;
-    MockControllerAlertHandler mockControllerHandler;
-    MockEmailAlertHandler mockEmailHandler;
-
-    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+    TemperatureClassifier classifier;
+    MockOutput mockOutput;
+    EmailAlertHandler emailAlertHandler;
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
 
     monitor.checkAndAlert(-5, false);
 
-    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "Hi, the temperature is too low");
+    const auto& messages = mockOutput.getMessages();
+    ASSERT_EQ(messages.size(), 1);
+    ASSERT_EQ(messages[0], "Hi, the temperature is too low");
 }
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmailTooHigh) {
-    MockBreachClassifier mockClassifier;
-    mockClassifier.breachTypeToReturn = BreachType::TOO_HIGH;
-    MockControllerAlertHandler mockControllerHandler;
-    MockEmailAlertHandler mockEmailHandler;
-
-    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
+    TemperatureClassifier classifier;
+    MockOutput mockOutput;
+    EmailAlertHandler emailAlertHandler;
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
 
     monitor.checkAndAlert(50, false);
 
-    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "Hi, the temperature is too high");
+    const auto& messages = mockOutput.getMessages();
+    ASSERT_EQ(messages.size(), 1);
+    ASSERT_EQ(messages[0], "Hi, the temperature is too high");
 }
 
 TEST(BatteryMonitorTest, NoAlertSentForNormalTemperature) {
-    MockBreachClassifier mockClassifier;
-    mockClassifier.breachTypeToReturn = BreachType::NORMAL;
-    MockControllerAlertHandler mockControllerHandler;
-    MockEmailAlertHandler mockEmailHandler;
+    TemperatureClassifier classifier;
+    MockAlertHandler mockControllerHandler;
+    MockOutput mockOutput;
+    BatteryMonitor monitor(classifier, mockControllerHandler, mockOutput);
 
-    BatteryMonitor monitor(mockClassifier, mockControllerHandler, mockEmailHandler);
-
-    monitor.checkAndAlert(25, true);
+    monitor.checkAndAlert(25, true);  // Normal temperature should trigger no alert
 
     ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "");
-    ASSERT_EQ(mockEmailHandler.getEmailMessage(), "");
+}
+
+TEST(BatteryMonitorTest, EmailHandlerReceivesNoAlertForNormalTemperature) {
+    TemperatureClassifier classifier;
+    MockOutput mockOutput;
+    EmailAlertHandler emailAlertHandler;
+    BatteryMonitor monitor(classifier, emailAlertHandler, mockOutput);
+
+    monitor.checkAndAlert(25, false);  // Normal temperature should trigger no alert
+
+    const auto& messages = mockOutput.getMessages();
+    ASSERT_EQ(messages.size(), 0); // No messages should be sent
 }
 
 // Main function for Google Test
