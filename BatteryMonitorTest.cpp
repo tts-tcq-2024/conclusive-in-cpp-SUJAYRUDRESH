@@ -39,18 +39,19 @@ private:
 TEST(BatteryMonitorTest, SendsCorrectMessageToController) {
     // Create instances of the mocks
     MockAlertHandler mockControllerHandler;
-    MockAlertHandler mockEmailHandler;  // Assuming emailHandler is needed but not used here
+    MockAlertHandler mockEmailHandler;  // Email handler is mocked but not used in this test
     TemperatureClassifier classifier;
 
     // Instantiate the BatteryMonitor with the mock objects
     BatteryMonitor monitor(classifier, mockControllerHandler, mockEmailHandler);
 
     // Simulate an alert for a high temperature
-    monitor.checkAndAlert(50, true);  // 'true' for controller
+    monitor.checkAndAlert(50, true);  // 'true' indicates it's for the controller
 
-    // Verify that the correct message was sent
+    // Verify that the correct message was sent to the controller
     ASSERT_EQ(mockControllerHandler.getBreachTypeMessage(), "feed : 1");  // Expecting TOO_HIGH (1)
 }
+
 
 TEST(BatteryMonitorTest, SendsCorrectMessageToEmail) {
     // Create instances of the mocks
