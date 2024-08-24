@@ -22,9 +22,8 @@ public:
 
 private:
     void handleControllerAlert(IAlertHandler& alertHandler, BreachType breachType) {
-        if (auto* controllerHandler = dynamic_cast<ControllerAlertHandler*>(&alertHandler)) {
-            controllerHandler->sendAlert(breachType);
-        }
+        // This check is redundant since the interface should ensure the correct method is called.
+        alertHandler.sendAlert(breachType);
     }
 
     void handleEmailAlert(IAlertHandler& alertHandler, BreachType breachType) {
