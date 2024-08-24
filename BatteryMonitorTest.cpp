@@ -62,7 +62,7 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooLow) {
     TemperatureClassifier classifier;
     MockAlertHandler mockHandler;
     ControllerAlertHandler controllerAlertHandler;
-    BatteryMonitor monitor(classifier, controllerAlertHandler, mockHandler);
+    BatteryMonitor monitor(classifier,mockHandler, controllerAlertHandler );
 
     monitor.checkAndAlert(-5, true);
 
@@ -85,7 +85,7 @@ TEST(BatteryMonitorTest, SendsCorrectMessageToControllerTooHigh) {
     TemperatureClassifier classifier;
     MockAlertHandler mockHandler;
     ControllerAlertHandler controllerAlertHandler;
-    BatteryMonitor monitor(classifier, controllerAlertHandler, mockHandler);
+    BatteryMonitor monitor(classifier, mockHandler, controllerAlertHandler);
 
     monitor.checkAndAlert(50, true);
 
@@ -122,7 +122,7 @@ TEST(BatteryMonitorTest, NoAlertSentForNormalTemperature) {
     TemperatureClassifier classifier;
     MockAlertHandler mockControllerHandler;
     MockOutput mockOutput;
-    BatteryMonitor monitor(classifier, mockControllerHandler, mockOutput);
+    BatteryMonitor monitor(classifier,mockOutput, mockControllerHandler );
 
     monitor.checkAndAlert(25, true);  // Normal temperature should trigger no alert
 
